@@ -5,19 +5,22 @@ using UnityEngine;
 public class Bird : MonoBehaviour
 {
     public float flapPower;
-
-    private Rigidbody2D body;
-
+    public AudioClip flap;
+    public AudioClip hit;
+    public AudioClip score;
     public MainScript mainScript;
 
+
+    private Rigidbody2D body;
     private Quaternion upRotation = Quaternion.Euler(0,0,45);
     private Quaternion downRotation = Quaternion.Euler(0, 0, -90);
+    private AudioSource audioSource;
 
     // Start is called before the first frame update
     void Start()
-    {
-        
-        body = this.GetComponent<Rigidbody2D>();
+    {  
+        body = GetComponent<Rigidbody2D>();
+        audioSource = GetComponent<AudioSource>();
     }
 
     // Update is called once per frame
@@ -25,6 +28,7 @@ public class Bird : MonoBehaviour
     {
         if (Input.GetMouseButtonDown(0))
         {
+            audioSource.PlayOneShot(flap);
             transform.rotation = upRotation;
             body.AddForce(Vector2.up * flapPower);
         }
@@ -37,11 +41,21 @@ public class Bird : MonoBehaviour
         if (obj.name == "PileScore")
         {
             Destroy (obj);
+            audioSource.PlayOneShot(score);
             mainScript.AddScore();
         }
         else
         {
-            UnityEngine.SceneManagement.SceneManager.LoadScene(2);
+            StartCoroutine("OnDie");
         }
+    }
+
+    private IEnumerator OnDie()
+    {
+        Time.timeScale = 0.01f;
+        audioSource.PlayOneShot(hit);
+        yield return new WaitForSeconds(0.005f);
+        Time.timeScale = 1;
+        UnityEngine.SceneManagement.SceneManager.LoadScene(2);
     }
 }
