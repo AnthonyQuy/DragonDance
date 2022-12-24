@@ -5,6 +5,7 @@ using UnityEngine.UI;
 
 public class MainScript : MonoBehaviour
 {
+
     public GameObject scoreObj;
     public static int score;
 
@@ -12,11 +13,13 @@ public class MainScript : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+
     }
 
     // Update is called once per frame
     void Update()
     {
+
     }
     
     public void AddScore()
